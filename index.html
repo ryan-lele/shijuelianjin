@@ -4,11 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>视觉炼金术 | AI商业空间视觉预演</title>
-    <meta name="description" content="不施工，只出图。用AI技术，3小时内把你的“空房子”变成“黄金屋”。">
+    <meta name="description" content="不施工，只出图。用AI技术，3小时内把你的“空房子”变成“黄金屋”。专业服务房产中介、商铺房东、活动策划。">
+    
     <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 引入 Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700;900&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    
+    <!-- 引入 Google Fonts (思源黑体) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700;900&display=swap" rel="stylesheet">
+    
     <!-- 引入 Lucide 图标 -->
     <script src="https://unpkg.com/lucide@latest"></script>
     
@@ -18,13 +21,13 @@
                 extend: {
                     fontFamily: {
                         sans: ['"Noto Sans SC"', 'sans-serif'],
-                        mono: ['"Space Grotesk"', 'monospace'],
                     },
                     colors: {
-                        primary: '#00F0FF', // 赛博蓝
-                        secondary: '#7000FF', // 霓虹紫
+                        primary: '#00F0FF', // 赛博蓝 (主色调)
+                        secondary: '#7000FF', // 霓虹紫 (辅助色)
                         dark: '#0A0A0A',
                         card: '#141414',
+                        gold: '#FFD700', // 金色 (强调价值)
                     }
                 }
             }
@@ -35,6 +38,7 @@
             background-color: #050505;
             color: #e5e5e5;
             scroll-behavior: smooth;
+            overflow-x: hidden;
         }
         .gradient-text {
             background: linear-gradient(to right, #00F0FF, #7000FF);
@@ -42,10 +46,12 @@
             -webkit-text-fill-color: transparent;
         }
         .glass-card {
-            background: rgba(20, 20, 20, 0.7);
-            backdrop-filter: blur(12px);
+            background: rgba(20, 20, 20, 0.8);
+            backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         }
+        
         /* 对比滑块样式 */
         .comparison-wrapper {
             position: relative;
@@ -54,9 +60,15 @@
             margin: 0 auto;
             overflow: hidden;
             border-radius: 1rem;
-            aspect-ratio: 16/9;
+            aspect-ratio: 4/3; /* 移动端更友好的比例 */
             cursor: col-resize;
             box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        @media (min-width: 640px) {
+            .comparison-wrapper {
+                aspect-ratio: 16/9;
+            }
         }
         .comparison-item {
             position: absolute;
@@ -66,7 +78,6 @@
             height: 100%;
             background-size: cover;
             background-position: center;
-            transition: background-image 0.3s ease-in-out;
         }
         .comparison-before {
             z-index: 1;
@@ -78,8 +89,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 48px;
-            height: 48px;
+            width: 40px;
+            height: 40px;
             background: rgba(0, 240, 255, 0.9);
             border-radius: 50%;
             z-index: 10;
@@ -89,11 +100,13 @@
             box-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
             pointer-events: none;
         }
+        
         /* 选中状态的 Tab */
         .tab-active {
             background-color: #00F0FF;
             color: #000;
             font-weight: bold;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
         }
     </style>
 </head>
@@ -103,87 +116,95 @@
     <nav class="fixed w-full z-50 glass-card border-b-0">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
                 <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded flex items-center justify-center text-black font-bold">V</div>
-                    <span class="font-mono font-bold text-lg tracking-wider hidden sm:block">VISUAL ALCHEMY</span>
+                    <i data-lucide="sparkles" class="text-primary w-6 h-6"></i>
+                    <span class="font-bold text-lg tracking-wider text-white">视觉炼金术</span>
                 </div>
+                
+                <!-- 桌面端菜单 -->
                 <div class="hidden md:flex space-x-8">
-                    <a href="#case" class="text-sm font-medium hover:text-primary transition">爆款案例</a>
-                    <a href="#services" class="text-sm font-medium hover:text-primary transition">服务价格</a>
-                    <a href="#faq" class="text-sm font-medium hover:text-primary transition">服务须知</a>
+                    <a href="#case" class="text-sm font-medium text-gray-300 hover:text-white transition">案例展示</a>
+                    <a href="#services" class="text-sm font-medium text-gray-300 hover:text-white transition">服务定价</a>
+                    <a href="#contact" class="text-sm font-medium text-gray-300 hover:text-white transition">联系我们</a>
                 </div>
-                <a href="#contact" class="bg-white text-black font-bold px-5 py-2 rounded-full hover:bg-primary hover:scale-105 transition duration-300 text-sm shadow-lg">
-                    立即咨询
+                
+                <!-- 移动端 CTA -->
+                <a href="#contact" class="bg-white text-black font-bold px-4 py-2 rounded-full hover:bg-primary transition text-xs sm:text-sm shadow-[0_0_10px_rgba(255,255,255,0.3)]">
+                    免费咨询
                 </a>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section (直击痛点) -->
-    <header class="relative pt-32 pb-20 sm:pt-48 sm:pb-32 overflow-hidden">
-        <!-- 背景光效 -->
-        <div class="absolute top-0 left-1/2 w-full -translate-x-1/2 h-full z-0 pointer-events-none">
-            <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[120px]"></div>
-            <div class="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-secondary/10 rounded-full blur-[120px]"></div>
+    <!-- Hero Section -->
+    <header class="relative pt-32 pb-16 sm:pt-48 sm:pb-32 overflow-hidden">
+        <div class="absolute top-0 left-1/2 w-full -translate-x-1/2 h-full z-0 pointer-events-none opacity-40">
+            <div class="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
+            <div class="absolute top-20 left-1/4 w-64 h-64 bg-primary rounded-full blur-[128px]"></div>
+            <div class="absolute bottom-20 right-1/4 w-80 h-80 bg-secondary rounded-full blur-[128px]"></div>
         </div>
         
-        <div class="relative z-10 max-w-5xl mx-auto px-4 text-center">
-            <div class="inline-flex items-center px-4 py-1.5 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs font-bold tracking-wide mb-8 uppercase">
-                <span class="w-2 h-2 bg-primary rounded-full mr-2 animate-pulse"></span>
-                多个百万项目 中标团队原班打造
+        <div class="relative z-10 max-w-4xl mx-auto px-4 text-center">
+            <div class="inline-flex items-center px-3 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-gray-300 text-xs sm:text-sm font-medium mb-8">
+                <span class="flex h-2 w-2 relative mr-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                </span>
+                义乌数贸中心 & 福田印象 中标团队原班打造
             </div>
             
-            <h1 class="text-5xl sm:text-7xl md:text-8xl font-black tracking-tight leading-tight mb-8">
-                你的房子卖不上价<br>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-400 to-gray-600">是因为它看起来</span>
-                <span class="gradient-text">太穷了。</span>
+            <h1 class="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight leading-tight mb-6">
+                别让<span class="text-gray-600 line-through decoration-red-500 decoration-4">卖相</span>毁了<br>
+                你的<span class="gradient-text">资产价值</span>
             </h1>
             
-            <p class="mt-6 text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
-                客户没有想象力。如果你只给他看毛坯，他只会在心里砍价。<br>
-                <strong>这就是我们存在的意义：</strong><br>
-                用 AI 技术，3 小时内把你的“空置资产”预演成“现金奶牛”。<br>
-                <span class="text-white font-bold">不施工，只出图。一张图，让成交率翻倍。</span>
+            <p class="mt-6 text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed px-2">
+                客户没有想象力。只看毛坯房，他们只会砍价。<br>
+                我们用 AI 技术，<span class="text-white font-bold border-b border-primary/50">3 小时内</span> 将您的“空置资产”预演为“成交爆款”。<br>
+                <span class="text-primary font-bold">不施工，只出图。一张图，让成交率翻倍。</span>
             </p>
             
-            <div class="mt-12 flex flex-col sm:flex-row justify-center gap-4">
-                <a href="#case" class="px-8 py-4 rounded-xl bg-primary text-black font-bold text-lg hover:bg-white transition shadow-[0_0_20px_rgba(0,240,255,0.3)] flex items-center justify-center gap-2">
-                    <i data-lucide="zap" class="w-5 h-5"></i> 看看到底有多神
+            <div class="mt-10 flex flex-col sm:flex-row justify-center gap-4 px-8">
+                <a href="#case" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-primary text-black font-bold text-lg hover:bg-white transition shadow-[0_0_20px_rgba(0,240,255,0.4)] flex items-center justify-center gap-2">
+                    <i data-lucide="eye" class="w-5 h-5"></i> 看效果演示
                 </a>
-                <a href="#contact" class="px-8 py-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold text-lg transition flex items-center justify-center">
+                <a href="#contact" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold text-lg transition flex items-center justify-center">
                     首单 ¥99 体验
                 </a>
             </div>
         </div>
     </header>
 
-    <!-- 案例展示 (多场景切换) -->
+    <!-- 案例展示核心区 -->
     <section id="case" class="py-20 bg-dark relative">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-10">
-                <h2 class="text-3xl sm:text-4xl font-bold mb-4">别光听我说，<span class="text-primary">看效果</span></h2>
-                <p class="text-gray-400">拖动滑块，见证“腐朽”化为“神奇”的瞬间。</p>
+                <h2 class="text-2xl sm:text-4xl font-bold mb-3">所见即所得 · <span class="text-primary">视觉预言</span></h2>
+                <p class="text-gray-400 text-sm sm:text-base">左右拖动滑块，见证“腐朽”化为“神奇”</p>
             </div>
 
             <!-- 场景切换 Tabs -->
-            <div class="flex flex-wrap justify-center gap-2 mb-8">
-                <button onclick="changeScene('shop')" class="scene-tab tab-active px-6 py-2 rounded-full border border-white/10 text-sm font-medium transition hover:bg-white/10" id="tab-shop">商铺转让</button>
-                <button onclick="changeScene('rental')" class="scene-tab px-6 py-2 rounded-full border border-white/10 text-sm font-medium transition hover:bg-white/10" id="tab-rental">出租房爆改</button>
-                <button onclick="changeScene('villa')" class="scene-tab px-6 py-2 rounded-full border border-white/10 text-sm font-medium transition hover:bg-white/10" id="tab-villa">别墅/大平层</button>
-                <button onclick="changeScene('event')" class="scene-tab px-6 py-2 rounded-full border border-white/10 text-sm font-medium transition hover:bg-white/10" id="tab-event">婚礼/活动</button>
+            <div class="flex flex-wrap justify-center gap-3 mb-8">
+                <button onclick="changeScene('shop')" class="scene-tab tab-active px-5 py-2 rounded-full border border-white/10 text-sm font-medium transition hover:bg-white/10" id="tab-shop">商铺转让</button>
+                <button onclick="changeScene('rental')" class="scene-tab px-5 py-2 rounded-full border border-white/10 text-sm font-medium transition hover:bg-white/10" id="tab-rental">出租房爆改</button>
+                <button onclick="changeScene('villa')" class="scene-tab px-5 py-2 rounded-full border border-white/10 text-sm font-medium transition hover:bg-white/10" id="tab-villa">别墅/大平层</button>
+                <button onclick="changeScene('event')" class="scene-tab px-5 py-2 rounded-full border border-white/10 text-sm font-medium transition hover:bg-white/10" id="tab-event">婚礼/活动</button>
             </div>
 
             <!-- 对比滑块组件 -->
             <div class="comparison-wrapper glass-card" id="slider">
                 <!-- After Image (Bottom) -->
-                <div class="comparison-item" id="img-after" style="background-image: url('https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?q=80&w=2000&auto=format&fit=crop');"></div>
+                <!-- 【已修改】默认初始显示商铺的改造后图片 -->
+                <div class="comparison-item" id="img-after" style="background-image: url('./images/shop-after.jpg');"></div>
                 
                 <!-- Before Image (Top) -->
-                <div class="comparison-item comparison-before" id="img-before" style="background-image: url('https://images.unsplash.com/photo-1582037928769-181f2644ec27?q=80&w=2000&auto=format&fit=crop');">
-                    <div class="absolute top-4 left-4 bg-black/80 text-white px-3 py-1 text-xs font-bold rounded uppercase tracking-wider">BEFORE: 现状</div>
+                <!-- 【已修改】默认初始显示商铺的改造前图片 -->
+                <div class="comparison-item comparison-before" id="img-before" style="background-image: url('./images/shop-before.jpg');">
+                    <div class="absolute top-4 left-4 bg-black/80 text-white px-3 py-1 text-xs font-bold rounded uppercase tracking-wider border border-white/20">BEFORE: 现状</div>
                 </div>
                 
-                <div class="absolute top-4 right-4 bg-primary text-black px-3 py-1 text-xs font-bold rounded uppercase tracking-wider">AFTER: 视觉预演</div>
+                <div class="absolute top-4 right-4 bg-primary text-black px-3 py-1 text-xs font-bold rounded uppercase tracking-wider shadow-lg">AFTER: 视觉预演</div>
 
                 <!-- Handle -->
                 <div class="slider-handle" id="slider-handle">
@@ -192,174 +213,173 @@
             </div>
 
             <!-- 痛点文案动态展示区 -->
-            <div class="mt-8 text-center max-w-2xl mx-auto p-6 rounded-2xl bg-gradient-to-b from-white/5 to-transparent border border-white/5">
-                <div id="case-desc" class="text-lg text-gray-200 font-medium italic">
-                    “这个铺子空置了半年，带看几十次都嫌破。做了这张‘网红咖啡馆’效果图贴在门口，3天就租出去了。”
+            <div class="mt-8 text-center max-w-2xl mx-auto p-6 rounded-2xl bg-white/5 border border-white/5 backdrop-blur-sm">
+                <div id="case-desc" class="text-base sm:text-lg text-gray-200 font-medium leading-relaxed">
+                    “这个铺子空置了半年，带看几十次都嫌破。做了这张‘网红咖啡馆’效果图贴在门口，<span class="text-primary font-bold">3天就租出去了。</span>”
                 </div>
-                <div class="mt-4 flex justify-center items-center gap-2 text-xs text-gray-500 uppercase tracking-widest">
-                    <span class="w-8 h-[1px] bg-gray-600"></span>
-                    REAL CASE STUDY
-                    <span class="w-8 h-[1px] bg-gray-600"></span>
+                <div class="mt-4 flex justify-center items-center gap-2 text-[10px] text-gray-500 uppercase tracking-widest">
+                    <span class="w-8 h-[1px] bg-gray-700"></span>
+                    真实案例复盘
+                    <span class="w-8 h-[1px] bg-gray-700"></span>
                 </div>
             </div>
 
         </div>
     </section>
 
-    <!-- 核心价值/为什么买单 -->
-    <section class="py-20 border-t border-white/5">
+    <!-- 核心价值 -->
+    <section class="py-20 bg-black">
         <div class="max-w-7xl mx-auto px-4 text-center">
-            <h2 class="text-3xl font-bold mb-16">为什么你需要 <span class="text-secondary">视觉预演</span>？</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                <!-- Card 1 -->
-                <div class="p-6">
-                    <div class="w-16 h-16 bg-gray-800 rounded-2xl flex items-center justify-center mx-auto mb-6 text-primary">
-                        <i data-lucide="eye-off" class="w-8 h-8"></i>
+            <h2 class="text-3xl font-bold mb-12">为什么你需要 <span class="text-secondary">视觉预演</span>？</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="p-6 rounded-2xl bg-gray-900 border border-gray-800">
+                    <div class="w-14 h-14 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4 text-primary">
+                        <i data-lucide="brain-circuit" class="w-7 h-7"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">消除“想象力黑洞”</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">客户不是专业的。面对毛坯房，他们只能看到灰尘和水泥。我们帮他们看到<strong class="text-white">未来的生活</strong>，直接击穿心理防线。</p>
+                    <h3 class="text-lg font-bold mb-2 text-white">消除“想象力黑洞”</h3>
+                    <p class="text-gray-400 text-sm">客户不是设计师。面对毛坯房，他们只能看到灰尘。我们帮他们看到<strong class="text-white">未来的生活</strong>，直接击穿心理防线。</p>
                 </div>
-                <!-- Card 2 -->
-                <div class="p-6">
-                    <div class="w-16 h-16 bg-gray-800 rounded-2xl flex items-center justify-center mx-auto mb-6 text-primary">
-                        <i data-lucide="clock" class="w-8 h-8"></i>
+                <div class="p-6 rounded-2xl bg-gray-900 border border-gray-800">
+                    <div class="w-14 h-14 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4 text-primary">
+                        <i data-lucide="clock" class="w-7 h-7"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">极速交付，不错过商机</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">传统设计公司出图要一周，收费几千。我们用 AI 技术，<strong class="text-white">3 小时出图</strong>，让你在这个客户走出大门前就能把图发给他。</p>
+                    <h3 class="text-lg font-bold mb-2 text-white">极速交付，抢占先机</h3>
+                    <p class="text-gray-400 text-sm">传统设计出图要一周，收费几千。我们用 AI 技术，<strong class="text-white">3 小时出图</strong>，让客户没走出大门就能看到效果。</p>
                 </div>
-                <!-- Card 3 -->
-                <div class="p-6">
-                    <div class="w-16 h-16 bg-gray-800 rounded-2xl flex items-center justify-center mx-auto mb-6 text-primary">
-                        <i data-lucide="trending-up" class="w-8 h-8"></i>
+                <div class="p-6 rounded-2xl bg-gray-900 border border-gray-800">
+                    <div class="w-14 h-14 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4 text-primary">
+                        <i data-lucide="coins" class="w-7 h-7"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">极低成本的杠杆</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">几百块的投入，换来的是几万块中介费/几十万租金的快速回笼。这是目前<strong class="text-white">回报率最高</strong>的房产营销投入。</p>
+                    <h3 class="text-lg font-bold mb-2 text-white">高回报率杠杆</h3>
+                    <p class="text-gray-400 text-sm">几百块的投入，换来的是几万块中介费/几十万租金的快速回笼。这是目前<strong class="text-white">性价比最高</strong>的房产营销手段。</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 定价表 -->
-    <section id="services" class="py-20 bg-dark relative overflow-hidden">
-        <!-- 装饰背景 -->
-        <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/5 to-transparent pointer-events-none"></div>
-
+    <!-- 服务定价 -->
+    <section id="services" class="py-20 relative overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 relative z-10">
             <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold">简单粗暴的<span class="gradient-text">定价</span></h2>
-                <p class="text-gray-400 mt-2">不玩套路，没有隐形消费。</p>
+                <h2 class="text-3xl font-bold">服务<span class="gradient-text">报价</span></h2>
+                <p class="text-gray-400 mt-2 text-sm">明码标价，无隐形消费。</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- A套餐 -->
                 <div class="glass-card p-8 rounded-2xl hover:border-primary/50 transition group">
-                    <div class="text-sm text-gray-400 mb-4 font-mono">PACKAGE A</div>
-                    <h3 class="text-2xl font-bold mb-2">极速预演</h3>
-                    <p class="text-gray-500 text-sm mb-6 min-h-[40px]">一张图定乾坤。适合中介带看、房东急租。</p>
-                    <div class="flex items-end gap-2 mb-6">
-                        <span class="text-4xl font-bold text-white">¥299</span>
-                        <span class="text-gray-500 text-sm mb-1">/ 张</span>
+                    <div class="text-xs text-gray-500 mb-4 font-mono tracking-widest">基础版</div>
+                    <h3 class="text-xl font-bold mb-2">极速预演包</h3>
+                    <p class="text-gray-400 text-xs mb-6 h-8">一张图定乾坤。适合中介带看、房东急租。</p>
+                    <div class="flex items-baseline gap-1 mb-6">
+                        <span class="text-3xl font-bold text-white">¥299</span>
+                        <span class="text-gray-500 text-xs">/ 张</span>
                     </div>
                     <div class="space-y-3 text-sm text-gray-300 mb-8">
-                        <div class="flex gap-3"><i data-lucide="check-circle" class="text-primary w-5 h-5"></i> <span>1张 爆改对比图</span></div>
-                        <div class="flex gap-3"><i data-lucide="check-circle" class="text-primary w-5 h-5"></i> <span>3小时 极速交付</span></div>
-                        <div class="flex gap-3"><i data-lucide="check-circle" class="text-primary w-5 h-5"></i> <span>赠送 朋友圈营销文案</span></div>
+                        <div class="flex gap-3"><i data-lucide="check" class="text-primary w-4 h-4"></i> <span>1张 爆改对比图</span></div>
+                        <div class="flex gap-3"><i data-lucide="check" class="text-primary w-4 h-4"></i> <span>3小时 极速交付</span></div>
+                        <div class="flex gap-3"><i data-lucide="check" class="text-primary w-4 h-4"></i> <span>赠送 朋友圈营销文案</span></div>
                     </div>
-                    <a href="#contact" class="block w-full py-3 rounded-lg border border-white/10 hover:bg-white hover:text-black text-center transition font-bold">选这个</a>
+                    <a href="#contact" class="block w-full py-3 rounded-lg border border-white/20 hover:bg-white hover:text-black text-center transition font-bold text-sm">选择此方案</a>
                 </div>
 
-                <!-- B套餐 (推荐) -->
-                <div class="p-8 rounded-2xl bg-gradient-to-b from-gray-800 to-gray-900 border border-primary shadow-[0_0_40px_rgba(0,240,255,0.15)] relative transform md:-translate-y-4">
-                    <div class="absolute top-0 left-1/2 -translate-x-1/2 bg-primary text-black text-xs font-bold px-3 py-1 rounded-b-lg">店主推荐</div>
-                    <div class="text-sm text-primary mb-4 font-mono">PACKAGE B</div>
-                    <h3 class="text-2xl font-bold mb-2">全案视觉包</h3>
-                    <p class="text-gray-400 text-sm mb-6 min-h-[40px]">让客户身临其境。适合活动策划、高端民宿。</p>
-                    <div class="flex items-end gap-2 mb-6">
-                        <span class="text-4xl font-bold text-white">¥999</span>
-                        <span class="text-gray-500 text-sm mb-1">/ 套</span>
+                <!-- B套餐 (主推) -->
+                <div class="p-8 rounded-2xl bg-gradient-to-b from-gray-800 to-black border border-primary shadow-[0_0_30px_rgba(0,240,255,0.15)] relative transform md:-translate-y-4">
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 bg-primary text-black text-[10px] font-bold px-3 py-1 rounded-b-lg uppercase">Best Seller</div>
+                    <div class="text-xs text-primary mb-4 font-mono tracking-widest">进阶版</div>
+                    <h3 class="text-xl font-bold mb-2">全案视觉包</h3>
+                    <p class="text-gray-400 text-xs mb-6 h-8">身临其境。适合婚礼策划、活动场地、民宿。</p>
+                    <div class="flex items-baseline gap-1 mb-6">
+                        <span class="text-3xl font-bold text-white">¥999</span>
+                        <span class="text-gray-500 text-xs">/ 套</span>
                     </div>
                     <div class="space-y-3 text-sm text-gray-300 mb-8">
-                        <div class="flex gap-3"><i data-lucide="check-circle" class="text-primary w-5 h-5"></i> <span>3-5张 多角度效果图</span></div>
-                        <div class="flex gap-3"><i data-lucide="video" class="text-primary w-5 h-5"></i> <span class="text-white font-bold">10秒 AI运镜视频</span></div>
-                        <div class="flex gap-3"><i data-lucide="check-circle" class="text-primary w-5 h-5"></i> <span>24小时 交付</span></div>
-                        <div class="flex gap-3"><i data-lucide="check-circle" class="text-primary w-5 h-5"></i> <span>包含 1 次微调</span></div>
+                        <div class="flex gap-3"><i data-lucide="check" class="text-primary w-4 h-4"></i> <span>3-5张 多角度效果图</span></div>
+                        <div class="flex gap-3"><i data-lucide="video" class="text-primary w-4 h-4"></i> <span class="text-white font-bold">10秒 AI运镜视频</span></div>
+                        <div class="flex gap-3"><i data-lucide="check" class="text-primary w-4 h-4"></i> <span>24小时 交付</span></div>
+                        <div class="flex gap-3"><i data-lucide="check" class="text-primary w-4 h-4"></i> <span>含 1 次微调</span></div>
                     </div>
-                    <a href="#contact" class="block w-full py-3 rounded-lg bg-primary text-black hover:bg-white text-center transition font-bold shadow-lg">就要这个</a>
+                    <a href="#contact" class="block w-full py-3 rounded-lg bg-primary text-black hover:bg-white text-center transition font-bold text-sm shadow-lg">最受欢迎</a>
                 </div>
 
                 <!-- C套餐 -->
                 <div class="glass-card p-8 rounded-2xl hover:border-secondary/50 transition group">
-                    <div class="text-sm text-gray-400 mb-4 font-mono">PACKAGE C</div>
-                    <h3 class="text-2xl font-bold mb-2">招商/投标赋能</h3>
-                    <p class="text-gray-500 text-sm mb-6 min-h-[40px]">不仅要图，还要赢。适合投标公司、项目招商。</p>
-                    <div class="flex items-end gap-2 mb-6">
-                        <span class="text-4xl font-bold text-white">¥2999</span>
-                        <span class="text-gray-500 text-sm mb-1">/ 起</span>
+                    <div class="text-xs text-gray-500 mb-4 font-mono tracking-widest">专业版</div>
+                    <h3 class="text-xl font-bold mb-2">招商/投标赋能</h3>
+                    <p class="text-gray-400 text-xs mb-6 h-8">不仅要图，还要赢。适合投标公司、项目招商。</p>
+                    <div class="flex items-baseline gap-1 mb-6">
+                        <span class="text-3xl font-bold text-white">¥2999</span>
+                        <span class="text-gray-500 text-xs">/ 起</span>
                     </div>
                     <div class="space-y-3 text-sm text-gray-300 mb-8">
-                        <div class="flex gap-3"><i data-lucide="check-circle" class="text-secondary w-5 h-5"></i> <span>Gemini 3 深度逻辑拆解</span></div>
-                        <div class="flex gap-3"><i data-lucide="check-circle" class="text-secondary w-5 h-5"></i> <span>3张 核心概念海报</span></div>
-                        <div class="flex gap-3"><i data-lucide="check-circle" class="text-secondary w-5 h-5"></i> <span>汇报逐字稿 + PPT大纲</span></div>
+                        <div class="flex gap-3"><i data-lucide="check" class="text-secondary w-4 h-4"></i> <span>Gemini 3 深度逻辑拆解</span></div>
+                        <div class="flex gap-3"><i data-lucide="check" class="text-secondary w-4 h-4"></i> <span>3张 核心概念海报</span></div>
+                        <div class="flex gap-3"><i data-lucide="check" class="text-secondary w-4 h-4"></i> <span>汇报逐字稿 + PPT大纲</span></div>
                     </div>
-                    <a href="#contact" class="block w-full py-3 rounded-lg border border-white/10 hover:bg-white hover:text-black text-center transition font-bold">咨询详情</a>
+                    <a href="#contact" class="block w-full py-3 rounded-lg border border-white/20 hover:bg-white hover:text-black text-center transition font-bold text-sm">咨询详情</a>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- 底部 CTA / Contact -->
-    <section id="contact" class="py-24 text-center px-4">
-        <div class="max-w-3xl mx-auto glass-card p-12 rounded-3xl border-primary/20 relative overflow-hidden">
+    <section id="contact" class="py-24 text-center px-4 bg-gradient-to-b from-dark to-black">
+        <div class="max-w-2xl mx-auto glass-card p-10 rounded-3xl border-primary/20 relative overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-white to-secondary"></div>
             
-            <h2 class="text-3xl sm:text-4xl font-black mb-6">别再让客户<br>对着空房子发呆了。</h2>
-            <p class="text-gray-400 mb-10 text-lg">现在添加微信，发送你的“毛坯图”，立刻开始变现。<br><span class="text-primary text-sm mt-2 block">首单限时体验价 ¥99，仅限本周前 5 名。</span></p>
+            <h2 class="text-2xl sm:text-4xl font-black mb-6">别再让客户<br>对着空房子发呆了。</h2>
+            <p class="text-gray-400 mb-8 text-base">
+                立刻添加微信，发送您的“毛坯图”，开始变现。<br>
+                <span class="text-primary text-sm mt-2 block font-bold">首单限时体验价 ¥99 (限本周前5名)</span>
+            </p>
             
-            <div class="flex flex-col items-center gap-4">
-                <button onclick="copyWechat()" class="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-black transition-all duration-200 bg-primary font-mono rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary hover:bg-white hover:scale-105 w-full sm:w-auto">
+            <div class="flex flex-col items-center gap-4 w-full">
+                <button onclick="copyWechat()" class="group w-full sm:w-auto relative inline-flex items-center justify-center px-8 py-4 font-bold text-black transition-all duration-200 bg-primary font-mono rounded-full focus:outline-none hover:bg-white hover:scale-105 shadow-[0_0_20px_rgba(0,240,255,0.4)]">
                     <span class="mr-2 text-lg">微信: ld7186630</span>
                     <i data-lucide="copy" class="w-5 h-5 group-hover:animate-bounce"></i>
                 </button>
-                <a href="tel:18367037990" class="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white transition-all duration-200 border border-white/20 font-mono rounded-full hover:bg-white/10 w-full sm:w-auto">
+                
+                <a href="tel:18367037990" class="group w-full sm:w-auto relative inline-flex items-center justify-center px-8 py-4 font-bold text-white transition-all duration-200 border border-white/20 font-mono rounded-full hover:bg-white/10">
                     <span class="mr-2 text-lg">电话: 18367037990</span>
-                    <i data-lucide="phone" class="w-5 h-5"></i>
+                    <i data-lucide="phone" class="w-5 h-5 group-hover:text-green-400 transition"></i>
                 </a>
             </div>
             
-            <p class="mt-4 text-sm h-6 transition-all duration-300 opacity-0 text-primary" id="copy-msg">已复制！请打开微信添加好友。</p>
+            <p class="mt-4 text-sm h-6 transition-all duration-300 opacity-0 text-green-400 font-bold" id="copy-msg">✓ 微信号已复制！请打开微信添加。</p>
         </div>
     </section>
 
-    <footer class="py-8 text-center text-gray-700 text-xs border-t border-white/5">
-        <p>© 2025 Visual Alchemy Studio. Powered by Gemini 3 & Midjourney.</p>
+    <footer class="py-8 text-center text-gray-700 text-xs border-t border-white/5 bg-black">
+        <p class="mb-2">© 2025 Visual Alchemy Studio (视觉炼金术)</p>
+        <p>Powered by Gemini 3 & Midjourney</p>
     </footer>
 
+    <!-- JavaScript 逻辑 -->
     <script>
+        // 初始化图标
         lucide.createIcons();
 
-        // 案例数据配置 (请在这里替换你的真实图片链接)
-        // Before: 原图 (毛坯/空地)
-        // After: 效果图 (AI生成)
+        // 【已修改】案例数据配置 (指向本地 images 文件夹)
         const scenes = {
             shop: {
-                before: 'https://images.unsplash.com/photo-1582037928769-181f2644ec27?q=80&w=2000&auto=format&fit=crop', // 破旧商铺
-                after: 'https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?q=80&w=2000&auto=format&fit=crop',   // 网红店
-                desc: '“这个铺子空置了半年，带看几十次都嫌破。做了这张‘网红咖啡馆’效果图贴在门口，3天就租出去了。”'
+                before: './images/shop-before.jpg', 
+                after: './images/shop-after.jpg',   
+                desc: '“这个铺子空置了半年，带看几十次都嫌破。做了这张‘网红咖啡馆’效果图贴在门口，<span class="text-primary font-bold">3天就租出去了。</span>”'
             },
             rental: {
-                before: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=2000&auto=format&fit=crop', // 空房间
-                after: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=2000&auto=format&fit=crop',   // 温馨公寓
-                desc: '“老破小没人租？花299做张‘奶油风’布置图，瞬间变成抢手货，租金还涨了500。”'
+                before: './images/rental-before.jpg', 
+                after: './images/rental-after.jpg',   
+                desc: '“老破小没人租？花299做张‘奶油风’布置图，瞬间变成抢手货，<span class="text-primary font-bold">租金还涨了500。</span>”'
             },
             villa: {
-                before: 'https://images.unsplash.com/photo-1600607686527-6fb886090705?q=80&w=2000&auto=format&fit=crop', // 毛坯大厅 (这里暂用成图代替，实际请换毛坯)
-                after: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=2000&auto=format&fit=crop',   // 豪宅
-                desc: '“客户对着毛坯别墅没感觉？给他看这张‘未来豪宅’图，当场就在心里把家具摆好了。”'
+                before: './images/villa-before.jpg', 
+                after: './images/villa-after.jpg',   
+                desc: '“客户对着毛坯别墅没感觉？给他看这张‘未来豪宅’图，<span class="text-primary font-bold">当场就在心里把家具摆好了。</span>”'
             },
             event: {
-                before: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=2000&auto=format&fit=crop', // 空草坪
-                after: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2000&auto=format&fit=crop',   // 奢华婚礼
-                desc: '“新娘担心草坪太秃？一张‘梦幻现场’预演图，让她觉得这几万块场地费花得太值了。”'
+                before: './images/event-before.jpg', 
+                after: './images/event-after.jpg',   
+                desc: '“新娘担心草坪太秃？一张‘梦幻现场’预演图，<span class="text-primary font-bold">让她觉得这几万块场地费花得太值了。</span>”'
             }
         };
 
@@ -370,19 +390,24 @@
             const afterEl = document.getElementById('img-after');
             const descEl = document.getElementById('case-desc');
             
-            // 切换图片
-            beforeEl.style.backgroundImage = `url('${data.before}')`;
-            afterEl.style.backgroundImage = `url('${data.after}')`;
+            // 简单的淡入淡出效果
+            beforeEl.style.opacity = '0.5';
+            afterEl.style.opacity = '0.5';
             
-            // 切换文案
-            descEl.innerText = data.desc;
+            setTimeout(() => {
+                beforeEl.style.backgroundImage = `url('${data.before}')`;
+                afterEl.style.backgroundImage = `url('${data.after}')`;
+                descEl.innerHTML = data.desc;
+                beforeEl.style.opacity = '1';
+                afterEl.style.opacity = '1';
+            }, 200);
             
             // 切换 Tab 样式
             document.querySelectorAll('.scene-tab').forEach(btn => btn.classList.remove('tab-active', 'bg-primary', 'text-black'));
-            document.getElementById(`tab-${sceneKey}`).classList.add('tab-active');
+            document.getElementById(`tab-${sceneKey}`).classList.add('tab-active', 'bg-primary', 'text-black');
         }
 
-        // 滑块交互逻辑
+        // 滑块交互逻辑 (支持触摸和鼠标)
         const slider = document.getElementById('slider');
         const before = document.getElementById('img-before');
         const handle = document.getElementById('slider-handle');
@@ -391,27 +416,42 @@
         function move(e) {
             if (!isDown) return;
             const rect = slider.getBoundingClientRect();
-            let x = (e.clientX || e.touches[0].clientX) - rect.left;
+            let clientX = e.clientX;
+            if (e.touches && e.touches.length > 0) {
+                clientX = e.touches[0].clientX;
+            }
+            
+            let x = clientX - rect.left;
             if(x < 0) x = 0;
             if(x > rect.width) x = rect.width;
+            
             const percentage = (x / rect.width) * 100;
             before.style.width = percentage + "%";
             handle.style.left = percentage + "%";
         }
 
         slider.addEventListener('mousedown', () => isDown = true);
-        slider.addEventListener('touchstart', () => isDown = true);
+        slider.addEventListener('touchstart', (e) => { isDown = true; }, {passive: true});
+        
         window.addEventListener('mouseup', () => isDown = false);
         window.addEventListener('touchend', () => isDown = false);
+        
         window.addEventListener('mousemove', move);
-        window.addEventListener('touchmove', move);
+        window.addEventListener('touchmove', move, {passive: true});
 
-        // 复制微信号
+        // 复制微信号功能
         function copyWechat() {
             navigator.clipboard.writeText("ld7186630").then(() => {
                 const msg = document.getElementById('copy-msg');
                 msg.classList.remove('opacity-0');
-                setTimeout(() => msg.classList.add('opacity-0'), 2000);
+                msg.classList.add('animate-pulse');
+                setTimeout(() => {
+                    msg.classList.add('opacity-0');
+                    msg.classList.remove('animate-pulse');
+                }, 3000);
+            }).catch(err => {
+                console.error('无法复制', err);
+                alert("复制失败，请手动添加微信：ld7186630");
             });
         }
     </script>
